@@ -37,28 +37,54 @@ public class Game implements Trap,Bonus {
             // keeps the players turn in circle
             if(playerNumber>players.length) playerNumber=0;
             stepJump = rollDice();
-            if (numberIsAnySpecialNumber(specialIndexHashMap, players[playerNumber].currentIndex + stepJump)) {
-                String specialIndexKey = getSpecialIndexKey(specialIndexHashMap, players[playerNumber].currentIndex + stepJump);
-                if(specialIndexKey!= null && specialIndexKey.toLowerCase().equals("trap")){
-
-                }else if(specialIndexKey!= null && specialIndexKey.toLowerCase().equals("bonus")){
-
-                }else if(specialIndexKey == null){
-
-                }
+            players[playerNumber].currentIndex += stepJump;
+            if(players[playerNumber].currentIndex >30){
+                playerWon=true;
             }else{
-                if(players[playerNumber].skipRound == false)
-                    players[playerNumber].movePlayer(stepJump);
-                else{
-                    players[playerNumber].skipRound = false;
+                if (numberIsAnySpecialNumber(specialIndexHashMap, players[playerNumber].currentIndex)) {
+                    String specialIndexKey = getSpecialIndexKey(specialIndexHashMap, players[playerNumber].currentIndex + stepJump);
+                    if(specialIndexKey!= null && specialIndexKey.equalsIgnoreCase("trap")){
+                        switch (randomFieldSelection()){
+                            case 1:
+                                movePlayerTwoFieldsBack(players[playerNumber]);
+                                break;
+                            case 2:
+                                moveOtherPLayersTwoFieldsForward(players, players[playerNumber].id);
+                                break;
+                            case 3:
+                                skipTheRound(players[playerNumber]);
+                                break;
+                            default:
+                                return;
+                        }
+                    }else if(specialIndexKey!= null && specialIndexKey.equalsIgnoreCase("bonus")){
+                        switch (randomFieldSelection()){
+                            case 1:
+                                movePlayerTwoFieldsForward(players[playerNumber]);
+                                break;
+                            case 2:
+                                moveOtherPLayersTwoFieldsBackward(players, players[playerNumber].id);
+                                break;
+                            case 3:
+                                utilizeJoker(players[playerNumber]);
+                                break;
+                            default:
+                                return;
+                        }
+                    }else if(specialIndexKey == null){
+                        System.out.println("Game crash error. No key could be found by the specified value... Ending game");
+                    }
+                }else{
+                    if(players[playerNumber].skipRound == false)
+                        players[playerNumber].movePlayer(stepJump);
+                    else{
+                        players[playerNumber].skipRound = false;
+                    }
                 }
             }
 
             playerNumber++;
 
-
-
-            playerWon=true;
         }
 
     }
@@ -129,7 +155,10 @@ public class Game implements Trap,Bonus {
 //        }
 //
 //    }
-
+    private int randomFieldSelection(){
+        Random random = new Random();
+        return random.nextInt(3 - 1 + 1) + 1;
+    }
 
     private boolean numberIsAnySpecialNumber(HashMap<String, Integer> hashMap, Integer toCheckValue){
         Iterator iterator = hashMap.entrySet().iterator();
@@ -160,34 +189,43 @@ public class Game implements Trap,Bonus {
 
 
 
-
+    /*----- Bonus Fields----*/
     @Override
     public void movePlayerTwoFieldsForward(Player player) {
-
+        player.currentIndex += 2;
     }
 
     @Override
-    public void moveOtherPLayersTwoFieldsBackward(Player[] players) {
-
+    public void moveOtherPLayersTwoFieldsBackward(Player[] players, int id) {
+        for (int i=0; i<players.length; i++) {
+            if(players[i].id != id){
+                players[i].currentIndex -= 2;
+            }
+        }
     }
 
     @Override
     public void utilizeJoker(Player player) {
-
+        player.joker = true;
     }
 
+    /*----- Trap Fields----*/
     @Override
     public void movePlayerTwoFieldsBack(Player player) {
-
+        player.currentIndex -= 2;
     }
 
     @Override
-    public void moveOtherPLayersTwoFieldsForward(Player[] players) {
-
+    public void moveOtherPLayersTwoFieldsForward(Player[] players, int id) {
+        for (int i=0; i<players.length; i++) {
+            if(players[i].id != id){
+                players[i].currentIndex += 2;
+            }
+        }
     }
 
     @Override
     public void skipTheRound(Player player) {
-
+        player.skipRound = true;
     }
 }
