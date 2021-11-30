@@ -1,11 +1,14 @@
 package com.company;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
     int id;
     String name;
     int currentIndex;
-    int[] deActivatedSpecialIndex;
+    ArrayList<Integer> deActivatedSpecialIndex;
     boolean skipRound;
     boolean joker;
 
@@ -14,7 +17,7 @@ public class Player {
         this.id = id;
         this.name = name;
         currentIndex = 0;
-        deActivatedSpecialIndex = new int[GlobalVariables.specialIndex];
+        deActivatedSpecialIndex = new ArrayList<Integer>();
         skipRound = false;
         joker = false;
     }
