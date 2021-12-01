@@ -53,15 +53,12 @@ public class Game implements Trap, Bonus {
                     if (numberIsAnySpecialNumber(specialIndexHashMap, players[playerNumber].currentIndex)) {
                         System.out.println("The player has landed on special field");
 
-                        if (!numberExistsInPlayerDeactivatedIndex(players[playerNumber].deActivatedSpecialIndex, players[playerNumber].currentIndex)) {
 
                             String specialIndexKey = getSpecialIndexKey(specialIndexHashMap, players[playerNumber].currentIndex);
 
                             if (specialIndexKey != null && specialIndexKey.equalsIgnoreCase("trap")) {
                                 // joker should be false only then a trap can be activated for that person
                                 if (!players[playerNumber].joker) {
-                                    // only deactivate that trap if the joker bonus is not used (Or is flase).
-                                    players[playerNumber].deActivatedSpecialIndex.add(players[playerNumber].currentIndex);
                                     switch (randomFieldSelection()) {
                                         case 1:
                                             movePlayerTwoFieldsBack(players[playerNumber]);
@@ -81,7 +78,6 @@ public class Game implements Trap, Bonus {
                                     players[playerNumber].joker = false;
                                 }
                             } else if (specialIndexKey != null && specialIndexKey.equalsIgnoreCase("bonus")) {
-                                players[playerNumber].deActivatedSpecialIndex.add(players[playerNumber].currentIndex);
                                 switch (randomFieldSelection()) {
                                     case 1:
                                         movePlayerTwoFieldsForward(players[playerNumber]);
@@ -98,7 +94,7 @@ public class Game implements Trap, Bonus {
                             } else if (specialIndexKey == null) {
                                 System.out.println("Game crash error. No key could be found by the specified value... Ending game");
                             }
-                        }
+
 
                     } else {
                         // condition when player lads on a standard field
@@ -215,14 +211,6 @@ public class Game implements Trap, Bonus {
         return number;
     }
 
-    private boolean numberExistsInPlayerDeactivatedIndex(ArrayList<Integer> arrayList, int index) {
-        for (Integer i : arrayList) {
-            if (i == index) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /*----- Bonus Fields----*/
     @Override

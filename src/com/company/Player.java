@@ -8,7 +8,6 @@ public class Player {
     int id;
     String name;
     int currentIndex;
-    ArrayList<Integer> deActivatedSpecialIndex;
     boolean skipRound;
     boolean joker;
 
@@ -17,7 +16,6 @@ public class Player {
         this.id = id;
         this.name = name;
         currentIndex = 0;
-        deActivatedSpecialIndex = new ArrayList<Integer>();
         skipRound = false;
         joker = false;
     }
