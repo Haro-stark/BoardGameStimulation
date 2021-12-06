@@ -1,9 +1,5 @@
 package com.company;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Player {
     int id;
     String name;
